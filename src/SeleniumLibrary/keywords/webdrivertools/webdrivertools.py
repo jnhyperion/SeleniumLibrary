@@ -26,7 +26,7 @@ from robot.api import logger
 from robot.utils import ConnectionCache
 from selenium import webdriver
 from selenium.webdriver import FirefoxProfile
-
+from seleniumwire.webdriver import Firefox, Chrome, Edge, Safari, Remote
 from SeleniumLibrary.keywords.webdrivertools.sl_file_detector import (
     SelLibLocalFileDetector,
 )
@@ -145,7 +145,7 @@ class WebDriverCreator:
             return self._remote(desired_capabilities, remote_url, options=options)
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Chrome)
-        return webdriver.Chrome(
+        return Chrome(
             options=options,
             service_log_path=service_log_path,
             executable_path=executable_path,
@@ -196,7 +196,7 @@ class WebDriverCreator:
         )
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Firefox)
-        return webdriver.Firefox(
+        return Firefox(
             options=options,
             firefox_profile=profile,
             service_log_path=service_log_path,
@@ -298,13 +298,13 @@ class WebDriverCreator:
         if self._has_options(webdriver.Edge):
             # options is supported from Selenium 4.0 onwards
             # If can be removed when minimum Selenium version is 4.0 or greater
-            return webdriver.Edge(
+            return Edge(
                 options=options,
                 service_log_path=service_log_path,
                 executable_path=executable_path,
                 **desired_capabilities,
             )
-        return webdriver.Edge(
+        return Edge(
             service_log_path=service_log_path,
             executable_path=executable_path,
             **desired_capabilities,
@@ -330,7 +330,7 @@ class WebDriverCreator:
             )
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Safari)
-        return webdriver.Safari(executable_path=executable_path, **desired_capabilities)
+        return Safari(executable_path=executable_path, **desired_capabilities)
 
     def create_phantomjs(
         self,
@@ -435,7 +435,7 @@ class WebDriverCreator:
     def _remote(self, desired_capabilities, remote_url, profile_dir=None, options=None):
         remote_url = str(remote_url)
         file_detector = self._get_sl_file_detector()
-        return webdriver.Remote(
+        return Remote(
             command_executor=remote_url,
             browser_profile=profile_dir,
             options=options,
