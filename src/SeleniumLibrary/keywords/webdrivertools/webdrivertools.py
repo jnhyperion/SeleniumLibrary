@@ -145,10 +145,12 @@ class WebDriverCreator:
             return self._remote(desired_capabilities, remote_url, options=options)
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Chrome)
+        seleniumwire_options = desired_capabilities["desired_capabilities"].pop("seleniumwire_options", None)
         return Chrome(
             options=options,
             service_log_path=service_log_path,
             executable_path=executable_path,
+            seleniumwire_options=seleniumwire_options,
             **desired_capabilities,
         )
 
@@ -196,11 +198,13 @@ class WebDriverCreator:
         )
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Firefox)
+        seleniumwire_options = desired_capabilities["capabilities"].pop("seleniumwire_options", None)
         return Firefox(
             options=options,
             firefox_profile=profile,
             service_log_path=service_log_path,
             executable_path=executable_path,
+            seleniumwire_options=seleniumwire_options,
             **desired_capabilities,
         )
 
@@ -295,6 +299,7 @@ class WebDriverCreator:
             return self._remote(desired_capabilities, remote_url)
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Edge)
+        seleniumwire_options = desired_capabilities["capabilities"].pop("seleniumwire_options", None)
         if self._has_options(webdriver.Edge):
             # options is supported from Selenium 4.0 onwards
             # If can be removed when minimum Selenium version is 4.0 or greater
@@ -302,11 +307,13 @@ class WebDriverCreator:
                 options=options,
                 service_log_path=service_log_path,
                 executable_path=executable_path,
+                seleniumwire_options=seleniumwire_options,
                 **desired_capabilities,
             )
         return Edge(
             service_log_path=service_log_path,
             executable_path=executable_path,
+            seleniumwire_options=seleniumwire_options,
             **desired_capabilities,
         )
 
@@ -330,7 +337,12 @@ class WebDriverCreator:
             )
         if not executable_path:
             executable_path = self._get_executable_path(webdriver.Safari)
-        return Safari(executable_path=executable_path, **desired_capabilities)
+        seleniumwire_options = desired_capabilities["desired_capabilities"].pop("seleniumwire_options", None)
+        return Safari(
+            executable_path=executable_path,
+            seleniumwire_options=seleniumwire_options,
+            **desired_capabilities
+        )
 
     def create_phantomjs(
         self,
@@ -435,11 +447,13 @@ class WebDriverCreator:
     def _remote(self, desired_capabilities, remote_url, profile_dir=None, options=None):
         remote_url = str(remote_url)
         file_detector = self._get_sl_file_detector()
+        seleniumwire_options = desired_capabilities["desired_capabilities"].pop("seleniumwire_options", None)
         return Remote(
             command_executor=remote_url,
             browser_profile=profile_dir,
             options=options,
             file_detector=file_detector,
+            seleniumwire_options=seleniumwire_options,
             **desired_capabilities,
         )
 
